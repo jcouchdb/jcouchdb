@@ -1,0 +1,24 @@
+jcouchdb JSON library change log:
+=================================
+
+Changes from 0.7.2 to 0.9.0-1:
+
+ * Reflects all changes from couchdb 0.8.1 to 0.9.0
+ * CouchDB dumper and loader classes to dump a database with attachments (both inlined as base64 or as single file)  into a zip file and restore it from one
+ * NoResponseException is now thrown in cases couchdb does not send a HTTP response
+ * introduced org.jcouchdb.db.DatabaseEventHandler as cross-cutting way to handle document changes
+ * accept objects as Options keys
+ * switched to svenson 1.2.8
+
+Changes from 0.7.1 to 0.7.2:
+
+ * switched to svenson 1.2.6 which fixes a major bug with trailing commas in the JSON output of pure BaseDocuments
+ * bugfix: Only update design documents in CouchDB Updater that have actually changed.
+
+Changes from 0.7 to 0.7.1:
+
+ * added Database.listDocumentsByUpdateSequence()
+ * added file based design document updating tool: org.jcouchdb.util.CouchDBUpdater
+ * added org.jcouchdb.spring.SpringCouchDBUpdater as spring wrapper for org.jcouchdb.util.CouchDBUpdater (spring is not included as dependency!)
+ * updated to svenson 1.2.4
+
