@@ -22,6 +22,8 @@ import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerPNames;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -55,7 +57,15 @@ public class ServerImpl implements Server {
 
     private DefaultHttpClient           httpClient;
 
+
+    private int                         MAX_CONNECTIONS_PER_ROUTE;
+    private int                         MAX_TOTAL_CONNECTIONS;   
+
     {
+
+        MAX_CONNECTIONS_PER_ROUTE   = 100;
+        MAX_TOTAL_CONNECTIONS       = 1000;
+        
         setup();
         clcm = createManager();
         httpClient = getHttpClient();
@@ -76,6 +86,16 @@ public class ServerImpl implements Server {
     }
 
     private final ClientConnectionManager createManager() {
+        defaultParameters.setParameter(
+                ConnManagerPNames.MAX_CONNECTIONS_PER_ROUTE,
+                new ConnPerRouteBean( MAX_CONNECTIONS_PER_ROUTE )
+        );
+
+        defaultParameters.setParameter(
+                ConnManagerPNames.MAX_TOTAL_CONNECTIONS,
+                MAX_TOTAL_CONNECTIONS
+        );
+
         return new ThreadSafeClientConnManager( defaultParameters, supportedSchemes );
     }
 
