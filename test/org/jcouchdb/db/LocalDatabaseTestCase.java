@@ -1,6 +1,5 @@
 package org.jcouchdb.db;
 
-import static org.easymock.EasyMock.matches;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.greaterThan;
@@ -17,7 +16,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -39,7 +37,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.svenson.JSON;
 import org.svenson.JSONParser;
-import org.svenson.JSONProperty;
 
 /**
  * Runs tests against a real couchdb database running on localhost
@@ -763,11 +760,28 @@ public class LocalDatabaseTestCase
     @Test
     public void thatViewsWorks()
     {
-        DesignDocument doc = new DesignDocument("listDoc");
+        Database db = createDatabaseForTest();
+        
+        
+        DesignDocument doc = null;
+        try
+        {
+            doc = db.getDesignDocument("listDoc");
+        }
+        catch(NotFoundException e)
+        {
+            
+        }
+        
+        
+        if (doc == null)
+        {
+            doc = new DesignDocument("listDoc");
+        }
         
         doc.addView("foos-by-value", new View(BY_VALUE_TO_NULL_FUNCTION));
         
-        doc.addListFunction("foo", "function(head, row, req, row_info) {\n" + 
+        doc.addListFunction("foo", /*"function(head, row, req, row_info) {\n" + 
         		"  if (head) {\n" + 
         		"    return '{\"head\": ' + JSON.stringify(head) + ',\"rows\":[';" + 
         		"  } else if (row) {\n" + 
@@ -775,17 +789,28 @@ public class LocalDatabaseTestCase
         		"  } else {\n" + 
         		"    return ']}';\n" + 
         		"  }\n" + 
-        		"}\n");
+        		"}\n");*/
         
-        Database db = createDatabaseForTest();
-        db.createDocument(doc);
-
+        "function(head, req){\n" + 
+        "  var row;\n" +
+        "  send('{\"head\": ' + JSON.stringify(head) + ',\"rows\":[' );\n" +
+        "  var first = true;" +
+        "  while(row = getRow()) {\n" +
+        "    send((first?'':',') + JSON.stringify(row));\n" +
+        "    first = false;" + 
+        "  }\n" +
+        "  send(']}');" + 
+        "}");
+        
+        db.createOrUpdateDocument(doc);
+        
         Response response = db.queryList("listDoc/foo", "foos-by-value", new Options().key("changed"));
         
         JSONParser parser = new JSONParser();
         parser.addTypeHint(".rows[]", ValueRow.class);
         
         response.setParser(parser);
+//        System.out.println(response.getContentAsString());
         Map m = response.getContentAsMap();
  
         Map head = (Map)m.get("head");
