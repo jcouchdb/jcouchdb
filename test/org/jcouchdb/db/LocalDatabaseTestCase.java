@@ -8,6 +8,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -183,7 +185,7 @@ public class LocalDatabaseTestCase
         FooDocument doc = new FooDocument("qux");
         doc.setId(MY_FOO_DOC_ID);
 
-        new Database(COUCHDB_HOST, COUCHDB_PORT, TESTDB_NAME).createDocument(doc);
+        createDatabaseForTest().createDocument(doc);
     }
 
     @Test
@@ -758,7 +760,7 @@ public class LocalDatabaseTestCase
     }
 
     @Test
-    public void thatViewsWorks()
+    public void thatViewsWorks() throws FileNotFoundException, IOException
     {
         Database db = createDatabaseForTest();
         
@@ -781,17 +783,7 @@ public class LocalDatabaseTestCase
         
         doc.addView("foos-by-value", new View(BY_VALUE_TO_NULL_FUNCTION));
         
-        doc.addListFunction("foo", /*"function(head, row, req, row_info) {\n" + 
-        		"  if (head) {\n" + 
-        		"    return '{\"head\": ' + JSON.stringify(head) + ',\"rows\":[';" + 
-        		"  } else if (row) {\n" + 
-                "    return (row_info.row_number == 0 ? '' : ',') + JSON.stringify(row);\n" + 
-        		"  } else {\n" + 
-        		"    return ']}';\n" + 
-        		"  }\n" + 
-        		"}\n");*/
-        
-        "function(head, req){\n" + 
+        doc.addListFunction("foo", "function(head, req){\n" + 
         "  var row;\n" +
         "  send('{\"head\": ' + JSON.stringify(head) + ',\"rows\":[' );\n" +
         "  var first = true;" +
@@ -802,16 +794,18 @@ public class LocalDatabaseTestCase
         "  send(']}');" + 
         "}");
         
-        db.createOrUpdateDocument(doc);
         
+        db.createOrUpdateDocument(doc);
+
         Response response = db.queryList("listDoc/foo", "foos-by-value", new Options().key("changed"));
         
         JSONParser parser = new JSONParser();
         parser.addTypeHint(".rows[]", ValueRow.class);
         
         response.setParser(parser);
-//        System.out.println(response.getContentAsString());
-        Map m = response.getContentAsMap();
+        String s = response.getContentAsString();
+        System.out.println(s);
+        Map m = parser.parse(Map.class, s);
  
         Map head = (Map)m.get("head");
         assertThat(head, is(notNullValue()));
