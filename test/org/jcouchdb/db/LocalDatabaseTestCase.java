@@ -783,7 +783,11 @@ public class LocalDatabaseTestCase
         
         doc.addView("foos-by-value", new View(BY_VALUE_TO_NULL_FUNCTION));
         
+        
+        String jsonFn = IOUtils.toString(new FileReader("test/org/jcouchdb/db/test-files/json2.js"));
+        
         doc.addListFunction("foo", "function(head, req){\n" + 
+            jsonFn +
         "  var row;\n" +
         "  send('{\"head\": ' + JSON.stringify(head) + ',\"rows\":[' );\n" +
         "  var first = true;" +
