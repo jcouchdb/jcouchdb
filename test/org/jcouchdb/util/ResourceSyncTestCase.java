@@ -11,10 +11,15 @@ import org.jcouchdb.db.LocalDatabaseTestCase;
 import org.jcouchdb.document.Attachment;
 import org.jcouchdb.document.BaseDocument;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ResourceSyncTestCase
 {
+    private static Logger log = LoggerFactory
+        .getLogger(ResourceSyncTestCase.class);
+    
     @Test
     public void test()
     {
@@ -30,6 +35,8 @@ public class ResourceSyncTestCase
         BaseDocument doc = db.getDocument(BaseDocument.class, sync.getResourceBaseDocId());
         Map<String, Attachment> map = doc.getAttachments();
         
+
+        System.out.println(map);
         assertThat(map.size(), is(2));
         assertThat(map.get("test.txt").getLength(), is((3l)));
         assertThat(map.get("sub/test.txt").getLength(), is((3l)));

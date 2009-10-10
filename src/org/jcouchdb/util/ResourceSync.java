@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jcouchdb.db.Database;
 import org.jcouchdb.document.BaseDocument;
@@ -76,7 +77,7 @@ public class ResourceSync
 
         String basePath = resourceBaseDir.getPath();
         
-        for (File f : (Collection<File>)FileUtils.listFiles(resourceBaseDir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE))
+        for (File f : (Collection<File>)FileUtils.listFiles(resourceBaseDir, TrueFileFilter.INSTANCE, new IgnoreSVNDirFilter()))
         {
             String path = f.getPath();
             if (!path.startsWith(basePath))
@@ -98,5 +99,23 @@ public class ResourceSync
                 throw ExceptionWrapper.wrap(e);
             }
         }
+    }
+    
+    private final static String SVN_INFIX = File.separator + ".svn";
+    
+    public static class IgnoreSVNDirFilter implements IOFileFilter
+    {
+
+        public boolean accept(File arg0)
+        {
+            return arg0.getPath().indexOf(SVN_INFIX) < 0;
+        }
+
+        public boolean accept(File arg0, String arg1)
+        {
+            String path = arg0.getPath() + File.separator + arg1;
+            return path.indexOf(SVN_INFIX) < 0;
+        }
+        
     }
 }
