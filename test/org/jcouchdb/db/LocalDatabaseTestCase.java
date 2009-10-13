@@ -37,6 +37,7 @@ import org.jcouchdb.exception.NotFoundException;
 import org.jcouchdb.exception.UpdateConflictException;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 import org.svenson.JSON;
 import org.svenson.JSONParser;
 
@@ -62,8 +63,8 @@ public class LocalDatabaseTestCase
     private static final String BY_VALUE_TO_NULL_FUNCTION = "function(doc) { if (doc.type == 'foo') { emit(doc.value,null); }  }";
 
     private static final String COMPLEX_KEY_FUNCTION = "function(doc) { if (doc.type == 'foo') { emit([1,{\"value\":doc.value}],doc); }  }";
-
-    protected static Logger log = Logger.getLogger(LocalDatabaseTestCase.class);
+    
+    private static org.slf4j.Logger log = LoggerFactory.getLogger(LocalDatabaseTestCase.class);
 
     public static Database createDatabaseForTest()
     {

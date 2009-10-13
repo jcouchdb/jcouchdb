@@ -181,7 +181,10 @@ public class Database
         }
         finally
         {
-            
+            if (resp != null)
+            {
+                resp.destroy();
+            }
         }
         
     }
@@ -1038,7 +1041,7 @@ public class Database
      *
      * @param docId             document id
      * @param attachmentId      attachment id
-     * @return
+     * @return response object (don't forget to call {@link Response#destroy()} when done)
      */
     public Response getAttachmentResponse(String docId, String attachmentId)
     {
@@ -1126,7 +1129,7 @@ public class Database
      * @param showName  Name of list including design doc (e.g. "designDocId/showName")
      * @param docId     document id 
      * @param options
-     * @return
+     * @return response object (don't forget to call {@link Response#destroy()} when done)
      */
     public Response queryShow(String showName, String docId, Options options)
     {
@@ -1146,7 +1149,7 @@ public class Database
      * @param listName  Name of list including design doc (e.g. "designDocId/viewName")  
      * @param viewName  view name without design document
      * @param options   
-     * @return
+     * @return response object (don't forget to call {@link Response#destroy()} when done)
      */
     public Response queryList(String listName, String viewName, Options options)
     {
