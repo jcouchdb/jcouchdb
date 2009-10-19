@@ -22,6 +22,7 @@ import org.jcouchdb.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.svenson.JSON;
+import org.svenson.JSONConfig;
 import org.svenson.JSONParser;
 
 /**
@@ -60,6 +61,10 @@ public class Database
     private Server server;
 
     private List<DatabaseEventHandler> eventHandlers = new ArrayList<DatabaseEventHandler>();
+
+    private JSONParser jsonParser;
+
+    private volatile JSONParser bulkCreateParser;
 
     /**
      * Creates a database object for the given host, the default port and the given data base name.
@@ -119,6 +124,24 @@ public class Database
     {
         this.jsonGenerator = jsonGenerator;
     }
+    
+    public void setJsonParser(JSONParser jsonParser)
+    {
+        this.jsonParser = jsonParser;        
+        this.bulkCreateParser = null;
+        
+    }
+    
+    public void setJsonConfig(JSONConfig config)
+    {
+        this.jsonGenerator = config.getJsonGenerator();
+        this.jsonParser = config.getJsonParser();
+    }
+    
+    public JSONConfig getJsonConfig()
+    {
+        return new JSONConfig(jsonGenerator, jsonParser);
+    }
 
     public List<DatabaseEventHandler> getEventHandlers()
     {
@@ -173,15 +196,15 @@ public class Database
         try
         {
             resp = server.get("/" + name + "/_compact");
-        if (!resp.isOk())
-        {
-            throw new DataAccessException("error getting database status for database " + name +
-                ": ", resp);
-        }
+            if (!resp.isOk())
+            {
+                throw new DataAccessException("error getting database status for database " + name +
+                    ": ", resp);
+            }
         }
         finally
         {
-            
+            resp.destroy();
         }
         
     }
@@ -225,7 +248,12 @@ public class Database
         Assert.notNull(cls, "class cannot be null");
         Assert.notNull(docId, "document id cannot be null");
 
-        String uri = "/" + name + "/" + escapeSlashes(docId);
+        if (!docId.startsWith("_design/"))
+        {
+            docId = escapeSlashes(docId);
+        }
+        
+        String uri = "/" + name + "/" + (docId);
         if (revision != null)
         {
             uri += "?rev="+revision;
@@ -242,10 +270,8 @@ public class Database
             {
                 throw new DataAccessException("error getting document " + docId + ": ", resp);
             }
-            if (parser != null)
-            {
-                resp.setParser(parser);
-            }
+            
+            resp.setParser(getJSONParserCopy(parser));
             return resp.getContentAsBean(cls);
         }
         finally
@@ -351,9 +377,7 @@ public class Database
                 }
             }
 
-            JSONParser parser = new JSONParser();
-            parser.addTypeHint("[]", DocumentInfo.class);
-            resp.setParser(parser);
+            resp.setParser(getBulkCreateParser());
             List<DocumentInfo> infos = resp.getContentAsBean(ArrayList.class);
 
             if (infos != null)
@@ -374,7 +398,23 @@ public class Database
         }
 
     }
-
+    
+    private JSONParser getBulkCreateParser()
+    {
+        if (bulkCreateParser == null)
+        {
+            synchronized(this)
+            {
+                if (bulkCreateParser == null)
+                {
+                    bulkCreateParser =  getJSONParserCopy(null);
+                    this.bulkCreateParser.addTypeHint("[]", DocumentInfo.class);
+                }
+            }
+        }
+        return bulkCreateParser;
+    }
+    
     /**
      * Deletes the document with the given id and revision.
      *
@@ -602,7 +642,7 @@ public class Database
         {
             throw new IllegalArgumentException("viewName must contain a slash separating the design doc name from the " + infix + " name");
         }
-        return DESIGN_DOCUMENT_PREFIX + escapeSlashes(viewName.substring(0,slashPos)) + "/_" + infix + "/" + escapeSlashes(viewName.substring(slashPos + 1));
+        return DESIGN_DOCUMENT_PREFIX + (viewName.substring(0,slashPos)) + "/_" + infix + "/" + (viewName.substring(slashPos + 1));
     }
 
     /**
@@ -660,12 +700,9 @@ public class Database
                 throw new DataAccessException("error querying view", resp);
             }
 
-            if (parser == null)
-            {
-                parser = new JSONParser();
-            }
-            parser.addTypeHint(VIEW_QUERY_VALUE_TYPEHINT, cls);
-            resp.setParser(parser);
+            JSONParser parserCopy = getJSONParserCopy(parser);
+            parserCopy.addTypeHint(VIEW_QUERY_VALUE_TYPEHINT, cls);
+            resp.setParser(parserCopy);
             return resp.getContentAsBean(ViewResult.class);
         }
         finally
@@ -766,20 +803,17 @@ public class Database
                 throw new DataAccessException("error querying view", resp);
             }
 
-            if (parser == null)
-            {
-                parser = new JSONParser();
-            }
-            parser.addTypeHint(VIEW_QUERY_VALUE_TYPEHINT, valueClass);
-            resp.setParser(parser);
-
+            JSONParser parserCopy = getJSONParserCopy(parser);
+            parserCopy.addTypeHint(VIEW_QUERY_VALUE_TYPEHINT, valueClass);
             if (isDocumentQuery)
             {
-                parser.addTypeHint(VIEW_QUERY_DOCUMENT_TYPEHINT, documentClass);
+                parserCopy.addTypeHint(VIEW_QUERY_DOCUMENT_TYPEHINT, documentClass);
+                resp.setParser(parserCopy);
                 return resp.getContentAsBean(ViewAndDocumentsResult.class);
             }
             else
             {
+                resp.setParser(parserCopy);
                 return resp.getContentAsBean(ViewResult.class);
             }
         }
@@ -791,6 +825,11 @@ public class Database
             }
         }
 
+    }
+
+    private JSONParser getJSONParserCopy(JSONParser localParser)
+    {
+        return new JSONParser(localParser != null ? localParser : jsonParser);
     }
 
 
