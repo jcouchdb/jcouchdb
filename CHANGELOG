@@ -1,6 +1,12 @@
 jcouchdb JSON library change log:
 =================================
 
+Changes from 0.9.1-3 to 0.9.1-4:
+ 
+ * added support for _uuids and replication
+ * support use cases with app global JSON config. See Hood Beta 2 for details.
+ * Fixed serious bug regarding JSONParser runs influencing each others JSON config in some situations.  
+ 
 Changes from 0.9.1-1 to 0.9.1-2:
  * Added JarBasedCouchDBUpdater that can update views from a directory or jar in the classpath
  * support for _show and _list
