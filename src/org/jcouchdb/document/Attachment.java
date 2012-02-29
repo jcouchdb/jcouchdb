@@ -21,7 +21,6 @@ public class Attachment
     private long length;
     private boolean stub;
     private int revPos;
-    private String digest;
     
     public Attachment()
     {
@@ -122,23 +121,5 @@ public class Attachment
         this.revPos = revPos;
     }
     
-    /**
-     * Returns the digest of this attachment that will change if the attachment gets updated.
-     * @return digest
-     */
-    public String getDigest()
-    {
-    	return digest;
-    }
-    
-    /**
-     * Sets the digest of this attachment.
-     * @param digest
-     */
-    @JSONProperty("digest")
-    public void setDigest(String digest)
-    {
-        this.digest = digest;
-    }
     
 }
