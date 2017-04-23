@@ -9,15 +9,16 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.jcouchdb.document.ViewResult;
 import org.jcouchdb.document.ValueRow;
+import org.jcouchdb.document.ViewResult;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.svenson.JSONParser;
 
 public class JSONParserTestCase
 {
-    protected static Logger log = Logger.getLogger(JSONParserTestCase.class);
+    protected final static Logger log = LoggerFactory.getLogger(JSONParserTestCase.class);
 
     private JSONParser parser = new JSONParser();
 

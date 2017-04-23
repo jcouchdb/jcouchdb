@@ -5,14 +5,15 @@ import static org.hamcrest.Matchers.is;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
 public class Base64UtilTestCase
 {
-    protected static Logger log = Logger.getLogger(Base64UtilTestCase.class);
+    protected final static Logger log = LoggerFactory.getLogger(Base64UtilTestCase.class);
 
     @Test
     public void thatEncodingWorks()

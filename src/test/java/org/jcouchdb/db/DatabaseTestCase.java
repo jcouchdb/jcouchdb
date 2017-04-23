@@ -9,13 +9,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class DatabaseTestCase
 {
-    protected static Logger log = Logger.getLogger(DatabaseTestCase.class);
+    protected final static Logger log = LoggerFactory.getLogger(DatabaseTestCase.class);
 
     @Test
     public void testStatus()

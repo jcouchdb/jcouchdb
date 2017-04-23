@@ -1,15 +1,14 @@
 package org.jcouchdb.document;
 
-import org.apache.log4j.Logger;
-import org.jcouchdb.document.DesignDocument;
-import org.jcouchdb.document.View;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.svenson.JSON;
 
 
 public class DesignDocumentTestCase
 {
-    protected static Logger log = Logger.getLogger(DesignDocumentTestCase.class);
+    protected final static Logger log = LoggerFactory.getLogger(DesignDocumentTestCase.class);
 
     private JSON jsonGen = new JSON();
 

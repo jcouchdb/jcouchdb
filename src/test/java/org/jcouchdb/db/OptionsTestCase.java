@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class OptionsTestCase
 {
-    protected static Logger log = Logger.getLogger(OptionsTestCase.class);
+    protected final static Logger log = LoggerFactory.getLogger(OptionsTestCase.class);
 
     @Test
     public void option()

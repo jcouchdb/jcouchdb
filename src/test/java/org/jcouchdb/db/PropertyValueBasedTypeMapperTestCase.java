@@ -13,18 +13,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.jcouchdb.document.BaseDocument;
 import org.jcouchdb.document.ValueRow;
 import org.jcouchdb.document.ViewResult;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.svenson.JSONParser;
 import org.svenson.PropertyValueBasedTypeMapper;
 
 
 public class PropertyValueBasedTypeMapperTestCase
 {
-    protected static Logger log = Logger.getLogger(PropertyValueBasedTypeMapperTestCase.class);
+    protected final static Logger log = LoggerFactory.getLogger(PropertyValueBasedTypeMapperTestCase.class);
 
     @Test
     public void thatItWorks() throws IOException
