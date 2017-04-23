@@ -1,3 +1,8 @@
+jcouchdb
+--------
+
+!src/site/resources/images/jcouchd.svg
+
 this is the jcouchdb source code. it can be build with ant.
 
 you can import this as project into Eclipse.
