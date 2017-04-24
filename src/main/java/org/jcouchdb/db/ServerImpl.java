@@ -273,15 +273,15 @@ public class ServerImpl
         }
         HttpPut put = new HttpPut( serverURI + uri );
         if (body != null) {
-            try {
+//            try {
                 StringEntity reqEntity = new StringEntity( body , "UTF-8");
                 reqEntity.setContentType("application/json");
                 reqEntity.setContentEncoding( CHARSET );
                 put.setEntity( reqEntity );
-            }
-            catch (UnsupportedEncodingException e) {
-                throw ExceptionWrapper.wrap(e);
-            }
+//            }
+//            catch (UnsupportedEncodingException e) {
+//                throw ExceptionWrapper.wrap(e);
+//            }
         }
 
         return executePut( put );        
