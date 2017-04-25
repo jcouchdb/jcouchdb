@@ -42,7 +42,7 @@ public class ResultAssemblerTestCase
     {
         db = LocalDatabaseTestCase.recreateDB("jcouchdb-result-assembler");
         db.setJsonConfig(createConfig());
-        new CouchDBLoader().load(new ZipInputStream(new FileInputStream("test/org/jcouchdb/document/test-files/result-assembler-db.zip")), db.getServer(), db.getName());
+        new CouchDBLoader().load(new ZipInputStream(new FileInputStream("src/test/resources/org/jcouchdb/document/test-files/result-assembler-db.zip")), db.getServer(), db.getName());
     }
 
     private static JSONConfig createConfig()

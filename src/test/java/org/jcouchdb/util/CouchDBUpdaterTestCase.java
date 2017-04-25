@@ -23,13 +23,12 @@ public class CouchDBUpdaterTestCase
     private final static Logger log = LoggerFactory.getLogger(CouchDBUpdaterTestCase.class);
 
     @Test
-
     public void thatDesignDocumentReadingWorks() throws IOException
     {
 
         
         CouchDBUpdater couchDBUpdater = new CouchDBUpdater();
-        couchDBUpdater.setDesignDocumentDir(new File("test/org/jcouchdb/util/test-views/"));
+        couchDBUpdater.setDesignDocumentDir(new File("src/test/resources/org/jcouchdb/util/test-views/"));
         couchDBUpdater.setDatabase(LocalDatabaseTestCase.createDatabaseForTest());
 
 

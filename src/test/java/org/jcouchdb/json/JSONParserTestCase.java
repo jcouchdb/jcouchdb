@@ -26,7 +26,7 @@ public class JSONParserTestCase
     public void thatViewResultParsingWorks() throws IOException
     {
         String json = FileUtils.readFileToString(new File(
-            "test/org/jcouchdb/json/test-files/view-result.json"));
+            "src/test/resources/org/jcouchdb/json/test-files/view-result.json"));
         log.info("json = " + json);
 
         parser.addTypeHint(".rows[]", ValueRow.class);

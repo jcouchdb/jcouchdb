@@ -18,8 +18,8 @@ public class JarBasedCouchDBUpdaterTestCase
     public void test() throws IOException
     {
         JarBasedCouchDBUpdater couchDBUpdater = new JarBasedCouchDBUpdater();
-        couchDBUpdater.setJarFile(new File("test/org/jcouchdb/util/views.jar"));
-        couchDBUpdater.setPathInsideJar("test/path/test-views/");
+        couchDBUpdater.setJarFile(new File("src/test/resources/org/jcouchdb/util/views.jar"));
+        couchDBUpdater.setPathInsideJar("src/test/resources/path/test-views/");
         couchDBUpdater.setDatabase(LocalDatabaseTestCase.createDatabaseForTest());
         
         List<DesignDocument> docs = couchDBUpdater.readDesignDocuments();
