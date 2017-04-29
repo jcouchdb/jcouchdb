@@ -2,7 +2,6 @@ package org.jcouchdb.db;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -273,15 +272,9 @@ public class ServerImpl
         }
         HttpPut put = new HttpPut( serverURI + uri );
         if (body != null) {
-//            try {
                 StringEntity reqEntity = new StringEntity( body , "UTF-8");
                 reqEntity.setContentType("application/json");
-                reqEntity.setContentEncoding( CHARSET );
                 put.setEntity( reqEntity );
-//            }
-//            catch (UnsupportedEncodingException e) {
-//                throw ExceptionWrapper.wrap(e);
-//            }
         }
 
         return executePut( put );        
@@ -341,7 +334,6 @@ public class ServerImpl
         {
             StringEntity reqEntity = new StringEntity(body, "UTF-8");
             reqEntity.setContentType("application/json");
-            reqEntity.setContentEncoding(CHARSET);
             post.setEntity(reqEntity);
 
             return execute(post);
