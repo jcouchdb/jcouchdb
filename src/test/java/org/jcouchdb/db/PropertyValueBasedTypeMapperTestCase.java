@@ -32,7 +32,7 @@ public class PropertyValueBasedTypeMapperTestCase
     {
         Server serverMock = createMock(Server.class);
 
-        String json = FileUtils.readFileToString(new File("test/org/jcouchdb/db/multi-type-result.json"));
+        String json = FileUtils.readFileToString(new File("src/test/resources/org/jcouchdb/db/multi-type-result.json"));
 
         expect(serverMock.get("/test/_all_docs")).andReturn(new Response(200,json)).anyTimes();
 
