@@ -1,8 +1,10 @@
 package org.jcouchdb.db;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.Matchers.notNullValue;
 
 import org.jcouchdb.document.BaseDocument;
@@ -99,12 +101,12 @@ public class ChangesTestCase
         
         t.join();
         
-        long diff = t.end - start;
+        long diff = System.currentTimeMillis() - start;
         
-        assertThat(diff, is(greaterThanOrEqualTo(LONG_POLLING_TEST_SLEEP_MS)));
         log.info("diff = {}",  diff);
+        assertThat(diff, is(greaterThan(LONG_POLLING_TEST_SLEEP_MS)));
         
-        assertThat( t.id, is(LONGPOLL_STOPPER_ID));
+        assertThat( t.getName(), is(LONGPOLL_STOPPER_ID));
     }
 
     public BaseDocument newDoc(String name, String data)
@@ -123,7 +125,7 @@ public class ChangesTestCase
         
         LongPollThread()
         {
-            super("LongPollThread");
+            super(LONGPOLL_STOPPER_ID);
         }
      
         @Override
