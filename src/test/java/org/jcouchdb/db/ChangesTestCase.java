@@ -31,27 +31,31 @@ public class ChangesTestCase
     @BeforeClass
     public static void createDB()
     {
-        db = LocalDatabaseTestCase.createRandomNamedDB("changes");
+//        db = LocalDatabaseTestCase.createRandomNamedDB("changes");
+    	db = new Database("localhost", 5984, "changes06315f012466968aa8f0dbb2c20e354c");
     }
 
 
     @AfterClass
     public static void deleteDB()
     {
-        db.getServer().deleteDatabase(db.getName());
+//        db.getServer().deleteDatabase(db.getName());
     }
 
 
     @Test
-    public void test()
+    public void test() throws InterruptedException
     {
         BaseDocument doc = newDoc("doc-1", "foo");
-        db.createDocument(doc);
+//        db.createDocument(doc);
+//        Thread.sleep(500);
         BaseDocument doc2 = newDoc("doc-2", "bar");
-        db.createDocument(doc2);
-        doc.setProperty("data", "baz");
-        db.updateDocument(doc);
-
+//        db.createDocument(doc2);
+//        Thread.sleep(500);
+//        doc.setProperty("data", "baz");
+//        db.updateDocument(doc);
+        
+        Thread.sleep(500);
         PollingResults results = db.pollChanges(null, null, false, null);
 
         assertThat(results, is(notNullValue()));
