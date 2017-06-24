@@ -13,6 +13,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
 
     <jaxrs.version>2.0.1</jaxrs.version>
+    <lombok.version>1.16.16</lombok.version>
   </properties>
 
   <modules>
@@ -21,10 +22,22 @@
 
   <dependencyManagement>
     <dependencies>
+
+      <!-- Compile scope -->
+
       <dependency>
         <groupId>javax.ws.rs</groupId>
         <artifactId>javax.ws.rs-api</artifactId>
         <version>${jaxrs.version}</version>
+      </dependency>
+
+      <!-- Provided scope -->
+
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

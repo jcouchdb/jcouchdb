@@ -12,9 +12,19 @@
   <name>JCouchDB - JAXRS</name>
 
   <dependencies>
+
+    <!-- Compile scope -->
+
     <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>javax.ws.rs-api</artifactId>
+    </dependency>
+
+    <!-- Provided scope -->
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
     </dependency>
   </dependencies>
 </project>
