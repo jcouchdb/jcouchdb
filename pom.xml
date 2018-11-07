@@ -23,6 +23,7 @@
   </properties>
 
   <modules>
+    <module>jcouchdb</module>
     <module>jcouchdb-jaxrs</module>
   </modules>
 
