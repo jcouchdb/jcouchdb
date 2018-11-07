@@ -40,11 +40,11 @@
         <artifactId>vavr</artifactId>
         <version>${vavr.version}</version>
       </dependency>
-      <dependency>
+      <!-- <dependency>
         <groupId>javax.ws.rs</groupId>
         <artifactId>javax.ws.rs-api</artifactId>
         <version>${jaxrs.version}</version>
-      </dependency>
+      </dependency> -->
       <dependency>
         <groupId>javax.json.bind</groupId>
         <artifactId>javax.json.bind-api</artifactId>
